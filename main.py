@@ -1,5 +1,14 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QGridLayout,
+    QApplication,
+    QVBoxLayout,
+    QWidget,
+    QHBoxLayout,
+    QStackedLayout,
+    QPushButton,
+)
 from PyQt5.QtCore import QSize
 from widgets.Color import Color
 
@@ -13,28 +22,41 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Docker")
 
         vertical_layout = QVBoxLayout()
-        vertical_layout.addWidget(Color("green"))
-        vertical_layout.addWidget(Color("white"))
-        vertical_layout.addWidget(Color("blue"))
-        vertical_layout.addWidget(Color("teal"))
-
         horizontal_layout = QHBoxLayout()
-        horizontal_layout.addWidget(Color("white"))
-        horizontal_layout.addWidget(Color("green"))
-        horizontal_layout.addWidget(Color("blue"))
-        horizontal_layout.addWidget(Color("teal"))
+        self.stacked_layout = QStackedLayout()
 
         vertical_layout.addLayout(horizontal_layout)
-        vertical_layout.setContentsMargins(0, 0, 0, 0)
-        vertical_layout.setSpacing(0)
-        horizontal_layout.setSpacing(0)
-        horizontal_layout.setContentsMargins(0, 5, 0, 0)
+        vertical_layout.addLayout(self.stacked_layout)
+
+        btn = QPushButton("red")
+        btn.pressed.connect(self.activate_tab_1)
+        horizontal_layout.addWidget(btn)
+        self.stacked_layout.addWidget(Color("red"))
+
+        btn = QPushButton("green")
+        btn.pressed.connect(self.activate_tab_2)
+        horizontal_layout.addWidget(btn)
+        self.stacked_layout.addWidget(Color("green"))
+
+        btn = QPushButton("yellow")
+        btn.pressed.connect(self.activate_tab_3)
+        horizontal_layout.addWidget(btn)
+        self.stacked_layout.addWidget(Color("yellow"))
 
         container = QWidget()
         container.setLayout(vertical_layout)
 
         self.setCentralWidget(container)
         self.setFixedSize(QSize(480, 320))
+
+    def activate_tab_1(self):
+        self.stacked_layout.setCurrentIndex(0)
+
+    def activate_tab_2(self):
+        self.stacked_layout.setCurrentIndex(1)
+
+    def activate_tab_3(self):
+        self.stacked_layout.setCurrentIndex(2)
 
 
 def main():
