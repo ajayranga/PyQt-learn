@@ -9,8 +9,15 @@ from PyQt5.QtWidgets import (
     QStackedLayout,
     QTabWidget,
     QPushButton,
+    QMainWindow,
+    QApplication,
+    QLabel,
+    QToolBar,
+    QAction,
+    QStatusBar,
 )
-from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon, QKeySequence
+from PyQt5.QtCore import Qt, QSize
 from widgets.Color import Color
 
 
@@ -22,14 +29,50 @@ class MainWindow(QMainWindow):
     def setup_ui(self):
         self.setWindowTitle("Docker")
 
-        tabs = QTabWidget()
-        tabs.setMovable(True)
-        tabs.setDocumentMode(True)
-        for n, color in enumerate(["red", "green", "yellow"]):
-            tabs.addTab(Color(color), color)
+        label = QLabel("Label")
+        label.setStatusTip("Label")
+        label.setAlignment(Qt.AlignCenter)
 
-        self.setCentralWidget(tabs)
-        self.setFixedSize(QSize(480, 320))
+        toolbar = QToolBar("Main Toolbar")
+        toolbar.setIconSize(QSize(16, 16))
+        toolbar.setMovable(True)
+        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+
+        button_action1 = QAction(
+            QIcon("assets/icons/icons/bug.png"), "Bug Button", self
+        )
+        button_action1.setStatusTip("Bug btn")
+        button_action1.setShortcut(QKeySequence("Ctrl+p"))
+        button_action1.setCheckable(True)
+        button_action1.triggered.connect(self.onMyToolBarButtonClick)
+        toolbar.addAction(button_action1)
+
+        button_action2 = QAction(
+            QIcon("assets/icons/icons/diamond.png"), "Diamond Button", self
+        )
+        button_action2.setStatusTip("Diamond btn")
+        button_action2.setCheckable(True)
+        button_action2.triggered.connect(self.onMyToolBarButtonClick)
+        toolbar.addAction(button_action2)
+
+        self.setStatusBar(QStatusBar(self))
+
+        self.addToolBar(toolbar)
+
+        menu = self.menuBar()
+        filemanu = menu.addMenu("&File")
+        filemanu.addAction(button_action1)
+        filemanu.addSeparator()
+
+        file_submanu = filemanu.addMenu("Submenu")
+        file_submanu.addAction(button_action2)
+        file_submanu.addSeparator()
+
+        self.setCentralWidget(label)
+        self.setMinimumSize(QSize(480, 320))
+
+    def onMyToolBarButtonClick(self, s):
+        print("Clicked ", s)
 
 
 def main():
