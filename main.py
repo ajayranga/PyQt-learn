@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
     QLabel,
     QToolBar,
     QAction,
+    QDialog,
     QStatusBar,
 )
 from PyQt5.QtGui import QIcon, QKeySequence
@@ -29,50 +30,21 @@ class MainWindow(QMainWindow):
     def setup_ui(self):
         self.setWindowTitle("Docker")
 
-        label = QLabel("Label")
-        label.setStatusTip("Label")
-        label.setAlignment(Qt.AlignCenter)
+        button = QPushButton("Button")
+        button.setStatusTip("Button")
+        button.setFixedSize(QSize(80, 40))
+        button.clicked.connect(self.handle_btn_click)
 
-        toolbar = QToolBar("Main Toolbar")
-        toolbar.setIconSize(QSize(16, 16))
-        toolbar.setMovable(True)
-        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-
-        button_action1 = QAction(
-            QIcon("assets/icons/icons/bug.png"), "Bug Button", self
-        )
-        button_action1.setStatusTip("Bug btn")
-        button_action1.setShortcut(QKeySequence("Ctrl+p"))
-        button_action1.setCheckable(True)
-        button_action1.triggered.connect(self.onMyToolBarButtonClick)
-        toolbar.addAction(button_action1)
-
-        button_action2 = QAction(
-            QIcon("assets/icons/icons/diamond.png"), "Diamond Button", self
-        )
-        button_action2.setStatusTip("Diamond btn")
-        button_action2.setCheckable(True)
-        button_action2.triggered.connect(self.onMyToolBarButtonClick)
-        toolbar.addAction(button_action2)
-
-        self.setStatusBar(QStatusBar(self))
-
-        self.addToolBar(toolbar)
-
-        menu = self.menuBar()
-        filemanu = menu.addMenu("&File")
-        filemanu.addAction(button_action1)
-        filemanu.addSeparator()
-
-        file_submanu = filemanu.addMenu("Submenu")
-        file_submanu.addAction(button_action2)
-        file_submanu.addSeparator()
-
-        self.setCentralWidget(label)
+        self.setCentralWidget(button)
         self.setMinimumSize(QSize(480, 320))
 
-    def onMyToolBarButtonClick(self, s):
+    def handle_btn_click(self, s):
         print("Clicked ", s)
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Dialog cc")
+        dlg.setFixedSize(QSize(180, 140))
+
+        dlg.show()
 
 
 def main():
