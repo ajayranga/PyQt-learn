@@ -1,68 +1,71 @@
-from random import choice
-from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QMainWindow,
-    QLabel,
-    QVBoxLayout,
-    QLineEdit,
-    QMenu,
-)
-from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt, QSize
 import sys
 
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDateTimeEdit,
+    QDial,
+    QDoubleSpinBox,
+    QFontComboBox,
+    QLabel,
+    QLCDNumber,
+    QLineEdit,
+    QMainWindow,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QTimeEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
+
+# Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setup_ui()
 
-    def setup_ui(self):
-        self.setWindowTitle("Docker")
-        self.label = QLabel("Default Text")
-        self.setMouseTracking(True)
-        self.input = QLineEdit("Hello")
-        self.input.textChanged.connect(self.label.setText)
+        self.setWindowTitle("Widgets App")
+
         layout = QVBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.input)
+        widgets = [
+            QCheckBox,
+            QComboBox,
+            QDateEdit,
+            QDateTimeEdit,
+            QDial,
+            QDoubleSpinBox,
+            QFontComboBox,
+            QLCDNumber,
+            QLabel,
+            QLineEdit,
+            QProgressBar,
+            QPushButton,
+            QRadioButton,
+            QSlider,
+            QSpinBox,
+            QTimeEdit,
+        ]
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
-        self.setFixedSize(QSize(480, 320))
+        # for w in widgets:
+        #     layout.addWidget(w())
 
-    def mouseMoveEvent(self, e):
-        self.label.setText("mouseMoveEvent")
-
-    def mouseReleaseEvent(self, e):
-        if e.button() == Qt.MouseButton.LeftButton:
-            self.label.setText("mouseReleaseEvent LEFT")
-
-        elif e.button() == Qt.MouseButton.MiddleButton:
-            self.label.setText("mouseReleaseEvent MIDDLE")
-
-        elif e.button() == Qt.MouseButton.RightButton:
-            self.label.setText("mouseReleaseEvent RIGHT")
-
-    def mouseDoubleClickEvent(self, e):
-        if e.button() == Qt.MouseButton.LeftButton:
-            self.label.setText("mouseDoubleClickEvent LEFT")
-
-        elif e.button() == Qt.MouseButton.MiddleButton:
-            self.label.setText("mouseDoubleClickEvent MIDDLE")
-
-        elif e.button() == Qt.MouseButton.RightButton:
-            self.label.setText("mouseDoubleClickEvent RIGHT")
-
-    def contextMenuEvent(self, event):
-        # return super().contextMenuEvent(event)
-        context = QMenu(self)
-        context.addAction(QAction("Hello", self))
-        context.addAction(QAction("Hello 1", self))
-        context.addAction(QAction("Hello 2", self))
-        context.exec(event.globalPos())
+        widget = QWidget()
+        label = QLabel()
+        label.setPixmap(QPixmap("assets/otje.webp"))
+        label.setScaledContents(True)
+        layout.addWidget(label)
+        widget.setLayout(layout)
+        # Set the central widget of the Window. Widget will expand
+        # to take up all the space in the window by default.
+        self.setCentralWidget(widget)
+        self.setMinimumSize(QSize(480, 320))
 
 
 def main():
