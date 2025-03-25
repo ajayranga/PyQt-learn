@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QHBoxLayout,
     QStackedLayout,
+    QTabWidget,
     QPushButton,
 )
 from PyQt5.QtCore import QSize
@@ -21,42 +22,14 @@ class MainWindow(QMainWindow):
     def setup_ui(self):
         self.setWindowTitle("Docker")
 
-        vertical_layout = QVBoxLayout()
-        horizontal_layout = QHBoxLayout()
-        self.stacked_layout = QStackedLayout()
+        tabs = QTabWidget()
+        tabs.setMovable(True)
+        tabs.setDocumentMode(True)
+        for n, color in enumerate(["red", "green", "yellow"]):
+            tabs.addTab(Color(color), color)
 
-        vertical_layout.addLayout(horizontal_layout)
-        vertical_layout.addLayout(self.stacked_layout)
-
-        btn = QPushButton("red")
-        btn.pressed.connect(self.activate_tab_1)
-        horizontal_layout.addWidget(btn)
-        self.stacked_layout.addWidget(Color("red"))
-
-        btn = QPushButton("green")
-        btn.pressed.connect(self.activate_tab_2)
-        horizontal_layout.addWidget(btn)
-        self.stacked_layout.addWidget(Color("green"))
-
-        btn = QPushButton("yellow")
-        btn.pressed.connect(self.activate_tab_3)
-        horizontal_layout.addWidget(btn)
-        self.stacked_layout.addWidget(Color("yellow"))
-
-        container = QWidget()
-        container.setLayout(vertical_layout)
-
-        self.setCentralWidget(container)
+        self.setCentralWidget(tabs)
         self.setFixedSize(QSize(480, 320))
-
-    def activate_tab_1(self):
-        self.stacked_layout.setCurrentIndex(0)
-
-    def activate_tab_2(self):
-        self.stacked_layout.setCurrentIndex(1)
-
-    def activate_tab_3(self):
-        self.stacked_layout.setCurrentIndex(2)
 
 
 def main():
