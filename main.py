@@ -1,6 +1,15 @@
 from random import choice
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
-from PyQt6.QtCore import QSize
+from PyQt6.QtWidgets import (
+    QApplication,
+    QWidget,
+    QMainWindow,
+    QLabel,
+    QVBoxLayout,
+    QLineEdit,
+    QMenu,
+)
+from PyQt6.QtGui import QAction
+from PyQt6.QtCore import Qt, QSize
 import sys
 
 
@@ -8,45 +17,52 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setup_ui()
-        self.button_is_checked = True
-
-    window_titles = [
-        "Docker",
-        "My App Docker",
-        "Still My App Docker",
-        "Still My App Docker",
-        "What on earth",
-        "What on earth",
-        "This is surprising",
-        "This is surprising",
-        "Something went wrong",
-    ]
 
     def setup_ui(self):
         self.setWindowTitle("Docker")
-        self.btn = QPushButton("Click Here")
-        self.btn.setCheckable(True)
-        self.btn.clicked.connect(self.on_btn_clicked)
-        self.btn.clicked.connect(self.on_btn_toggled)
-        self.btn.released.connect(self.on_btn_released)
-        self.setCentralWidget(self.btn)
+        self.label = QLabel("Default Text")
+        self.setMouseTracking(True)
+        self.input = QLineEdit("Hello")
+        self.input.textChanged.connect(self.label.setText)
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(self.input)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
         self.setFixedSize(QSize(480, 320))
 
-    def on_btn_clicked(self):
-        # self.btn.setEnabled(False)
-        print("Clicked")
+    def mouseMoveEvent(self, e):
+        self.label.setText("mouseMoveEvent")
 
-    def on_btn_toggled(self, checked):
-        if checked:
-            self.btn.setText("Clicked")
-        else:
-            self.btn.setText("Click Here")
-            self.setWindowTitle(choice(self.window_titles))
-        print("Checked ", checked)
+    def mouseReleaseEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
+            self.label.setText("mouseReleaseEvent LEFT")
 
-    def on_btn_released(self):
-        self.button_is_checked = self.btn.isChecked()
-        print("Released ")
+        elif e.button() == Qt.MouseButton.MiddleButton:
+            self.label.setText("mouseReleaseEvent MIDDLE")
+
+        elif e.button() == Qt.MouseButton.RightButton:
+            self.label.setText("mouseReleaseEvent RIGHT")
+
+    def mouseDoubleClickEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
+            self.label.setText("mouseDoubleClickEvent LEFT")
+
+        elif e.button() == Qt.MouseButton.MiddleButton:
+            self.label.setText("mouseDoubleClickEvent MIDDLE")
+
+        elif e.button() == Qt.MouseButton.RightButton:
+            self.label.setText("mouseDoubleClickEvent RIGHT")
+
+    def contextMenuEvent(self, event):
+        # return super().contextMenuEvent(event)
+        context = QMenu(self)
+        context.addAction(QAction("Hello", self))
+        context.addAction(QAction("Hello 1", self))
+        context.addAction(QAction("Hello 2", self))
+        context.exec(event.globalPos())
 
 
 def main():
