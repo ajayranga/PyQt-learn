@@ -22,32 +22,41 @@ from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import Qt, QSize
 from widgets.Color import Color
 from widgets.CustomDialog import CustomDialog
+from widgets.CustomWidget import CustomWidget
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setup_ui()
+        self.widget1 = CustomWidget()
+        self.widget2 = CustomWidget()
+        # self.show_widget = False
 
     def setup_ui(self):
         self.setWindowTitle("Docker")
 
         horizontal_layout = QHBoxLayout()
 
-        button = QPushButton("Button")
-        button.setStatusTip("Button")
-        button.setFixedSize(QSize(80, 40))
-        button.setCheckable(True)
-        button.clicked.connect(self.handle_btn_click)
+        self.button = QPushButton("Open Widget")
+        self.button.setStatusTip("Open Widget")
+        self.button.setFixedSize(QSize(120, 40))
+        self.button.setCheckable(True)
+        self.button.clicked.connect(
+            lambda checked: self.handle_btn_click(self.widget1, self.button)
+        )
 
-        button2 = QPushButton("Button2")
-        button2.setStatusTip("Button2")
-        button2.setFixedSize(QSize(80, 40))
-        button2.setCheckable(True)
-        button2.clicked.connect(self.handle_btn_click2)
+        horizontal_layout.addWidget(self.button)
 
-        horizontal_layout.addWidget(button)
-        horizontal_layout.addWidget(button2)
+        self.button2 = QPushButton("Open Widget")
+        self.button2.setStatusTip("Open Widget")
+        self.button2.setFixedSize(QSize(120, 40))
+        self.button2.setCheckable(True)
+        self.button2.clicked.connect(
+            lambda checked: self.handle_btn_click(self.widget2, self.button2)
+        )
+
+        horizontal_layout.addWidget(self.button2)
 
         container = QWidget()
         container.setLayout(horizontal_layout)
@@ -56,26 +65,20 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
         self.setMinimumSize(QSize(480, 320))
 
-    def handle_btn_click(self, s):
-        dlg = CustomDialog(parent=self)
-        res = dlg.exec()
-        print("res", res)
-
-    def handle_btn_click2(self, s):
-        button = QMessageBox.critical(
-            self,
-            "Oh dear!",
-            "Something went very wrong.",
-            buttons=QMessageBox.Discard | QMessageBox.NoToAll | QMessageBox.Ignore,
-            defaultButton=QMessageBox.Discard,
-        )
-
-        if button == QMessageBox.Discard:
-            print("Discard!")
-        elif button == QMessageBox.NoToAll:
-            print("No to all!")
+    def handle_btn_click(self, widget, button):
+        if widget.isVisible():
+            widget.hide()
+            button.setText("Open Widget")
         else:
-            print("Ignore!")
+            widget.show()
+            button.setText("Hide Widget")
+        # if self.show_widget:
+        #     self.widget.close()
+        #     self.button.setText("Open Widget")
+        # else:
+        #     self.widget.show()
+        #     self.button.setText("Hide Widget")
+        # self.show_widget = not self.show_widget
 
 
 def main():
