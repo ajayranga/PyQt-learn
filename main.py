@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.setup_ui()
 
     def setup_ui(self):
-        self.window = loadUi("views/screen/mainwindow.ui", self)
+        self.window = loadUi("views/screen/Employee.ui", self)
         self.window.show()
         self.setMinimumSize(QSize(480, 320))
 
